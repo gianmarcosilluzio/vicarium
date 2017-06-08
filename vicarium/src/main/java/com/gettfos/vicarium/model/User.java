@@ -19,7 +19,7 @@ public class User {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	private String facebookId, name, surname, sex, qualification, occupation, pathPhoto;
+	private String facebookId, name, surname, sex, qualification, occupation, pathPhoto, email, password;
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
 	private Date registrationDate;
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
@@ -28,20 +28,6 @@ public class User {
 	private List<Vote> votes = new ArrayList<Vote>();
 	
 	public User() {
-	}
-	
-	public User(String facebookId, String name, String surname, String sex, String qualification, String occupation,
-			String pathPhoto, Date registrationDate, Date lastAccess) {
-		super();
-		this.facebookId = facebookId;
-		this.name = name;
-		this.surname = surname;
-		this.sex = sex;
-		this.qualification = qualification;
-		this.occupation = occupation;
-		this.pathPhoto = pathPhoto;
-		this.registrationDate = registrationDate;
-		this.lastAccess = lastAccess;
 	}
 
 	public Integer getId() {
@@ -108,6 +94,22 @@ public class User {
 		this.pathPhoto = pathPhoto;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
@@ -136,9 +138,8 @@ public class User {
 	public String toString() {
 		return "User [id=" + id + ", facebookId=" + facebookId + ", name=" + name + ", surname=" + surname + ", sex="
 				+ sex + ", qualification=" + qualification + ", occupation=" + occupation + ", pathPhoto=" + pathPhoto
-				+ ", registrationDate=" + registrationDate + ", lastAccess=" + lastAccess + "]";
+				+ ", email=" + email + ", password=" + password + ", registrationDate=" + registrationDate
+				+ ", lastAccess=" + lastAccess + ", votes=" + votes + "]";
 	}
-
-	
 	
 }

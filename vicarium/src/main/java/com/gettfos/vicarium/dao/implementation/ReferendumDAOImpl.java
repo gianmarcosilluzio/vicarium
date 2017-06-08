@@ -1,4 +1,4 @@
-package com.gettfos.vicarium.dao;
+package com.gettfos.vicarium.dao.implementation;
 
 import java.util.List;
 
@@ -7,11 +7,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gettfos.vicarium.dao.AbstractDAO;
+import com.gettfos.vicarium.dao.ReferendumDAO;
 import com.gettfos.vicarium.model.Referendum;
 
 
 @Repository("referendumDao")
-public class ReferendumDaoImpl extends AbstractDao<Integer, Referendum> implements ReferendumDao{
+public class ReferendumDAOImpl extends AbstractDAO<Integer, Referendum> implements ReferendumDAO{
 
 	public Referendum readById(Integer id) {
 		Criteria criteria = createEntityCriteria();

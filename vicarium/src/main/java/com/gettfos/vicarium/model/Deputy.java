@@ -17,24 +17,11 @@ public class Deputy {
 	@Id
 	@GeneratedValue
 	private Integer id;
-	private String name, surname, sex, qualification, occupation, board, governmentAssignment, pathPhoto;
+	private String identifier, name, surname, sex, qualification, occupation, board, governmentAssignment, pathPhoto;
 	@OneToMany
 	private List<Vote> votes = new ArrayList<Vote>();
 	
 	public Deputy() {
-	}
-
-	public Deputy(String name, String surname, String sex, String qualification, String occupation, String board,
-			String governmentAssignment, String pathPhoto) {
-		super();
-		this.name = name;
-		this.surname = surname;
-		this.sex = sex;
-		this.qualification = qualification;
-		this.occupation = occupation;
-		this.board = board;
-		this.governmentAssignment = governmentAssignment;
-		this.pathPhoto = pathPhoto;
 	}
 
 	public Integer getId() {
@@ -43,6 +30,14 @@ public class Deputy {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 
 	public String getName() {
@@ -119,9 +114,10 @@ public class Deputy {
 
 	@Override
 	public String toString() {
-		return "Deputy [id=" + id + ", name=" + name + ", surname=" + surname + ", sex=" + sex + ", qualification="
-				+ qualification + ", occupation=" + occupation + ", board=" + board + ", governmentAssignment="
-				+ governmentAssignment + ", pathPhoto=" + pathPhoto + ", votes=" + votes + "]";
+		return "Deputy [id=" + id + ", identifier=" + identifier + ", name=" + name + ", surname=" + surname + ", sex="
+				+ sex + ", qualification=" + qualification + ", occupation=" + occupation + ", board=" + board
+				+ ", governmentAssignment=" + governmentAssignment + ", pathPhoto=" + pathPhoto + ", votes=" + votes
+				+ "]";
 	}
-	
+
 }

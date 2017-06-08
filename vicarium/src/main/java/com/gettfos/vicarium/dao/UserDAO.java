@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.gettfos.vicarium.model.User;
 
-public interface UserDao {
+public interface UserDAO {
 	User readById(Integer id);
 	User readByEmail(String email);
 	User readByFacebookId(String facebookId);

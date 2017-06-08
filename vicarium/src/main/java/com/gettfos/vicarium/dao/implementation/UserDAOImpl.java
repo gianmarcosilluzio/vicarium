@@ -1,4 +1,4 @@
-package com.gettfos.vicarium.dao;
+package com.gettfos.vicarium.dao.implementation;
 
 import java.util.List;
 
@@ -7,11 +7,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gettfos.vicarium.dao.AbstractDAO;
+import com.gettfos.vicarium.dao.UserDAO;
 import com.gettfos.vicarium.model.User;
 
 
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao{
+public class UserDAOImpl extends AbstractDAO<Integer, User> implements UserDAO{
 
 	public User readById(Integer id) {
 		Criteria criteria = createEntityCriteria();

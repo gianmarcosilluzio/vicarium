@@ -1,4 +1,4 @@
-package com.gettfos.vicarium.dao;
+package com.gettfos.vicarium.dao.implementation;
 
 import java.util.List;
 
@@ -7,11 +7,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.gettfos.vicarium.dao.AbstractDAO;
+import com.gettfos.vicarium.dao.VoteDAO;
 import com.gettfos.vicarium.model.Vote;
 
 
 @Repository("voteDao")
-public class VoteDaoImpl extends AbstractDao<Integer, Vote> implements VoteDao{
+public class VoteDAOImpl extends AbstractDAO<Integer, Vote> implements VoteDAO{
 
 
 	public Vote readByUserId(Integer userId) {

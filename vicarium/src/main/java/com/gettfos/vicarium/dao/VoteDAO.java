@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.gettfos.vicarium.model.Vote;
 
-public interface VoteDao {
+public interface VoteDAO {
 	Vote readByUserId(Integer userId);
 	List<Vote> readByReferendumId(Integer referendumId);
 	List<Vote> readAll();
