@@ -38,7 +38,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 	public void addCorsMappings(CorsRegistry registry) {
 		System.out.println("CORSSSSS");
 		registry.addMapping("*")
-			.allowedOrigins("http://localhost.com")
+			.allowedOrigins("http://localhost")
 			.allowedOrigins("http://getfos.com")
 			.allowedOrigins("*")
 			.allowedMethods("*")
