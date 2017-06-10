@@ -85,7 +85,7 @@ public class UserController {
 	@RequestMapping(value="/{userId}/votes", method = RequestMethod.GET)
 	ResponseEntity<List<Vote>> getUserVotes(@PathVariable Integer userId) {
 		User user = userService.getUserById(userId);
-		List<Vote> votes = voteService.getAllVoteByUserId(user);
+		List<Vote> votes = voteService.getPoliticVotes(user);
 		httpStatus = HttpStatus.OK;
 		return ResponseEntity.status(httpStatus).body(votes);
 	}

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
 
 	public User loginUserByEmail(String email, String password) {
 		User user = userDAO.readByEmail(email);
-		if(password.equals(user.getPassword())){
+		if(user != null && password.equals(user.getPassword())){
 			return user;
 		}
 		return null;

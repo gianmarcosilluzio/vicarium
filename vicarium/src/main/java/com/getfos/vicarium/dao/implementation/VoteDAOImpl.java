@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.getfos.vicarium.dao.AbstractDAO;
 import com.getfos.vicarium.dao.VoteDAO;
-import com.getfos.vicarium.model.User;
+import com.getfos.vicarium.model.Politic;
+import com.getfos.vicarium.model.Referendum;
 import com.getfos.vicarium.model.Vote;
 
 
@@ -18,19 +19,28 @@ public class VoteDAOImpl extends AbstractDAO<Integer, Vote> implements VoteDAO{
 
 
 	@SuppressWarnings("unchecked")
-	public List<Vote> readUserVotes(User user) {
+	public List<Vote> readPoliticVotes(Politic politic) {
 		Criteria criteria = createEntityCriteria();
-		criteria.add(Restrictions.eq("politic", user));
+		criteria.add(Restrictions.eq("politic", politic));
 		return criteria.list();
 	}
+
+	
+	@SuppressWarnings("unchecked")
+	public List<Vote> readAll() {
+		Criteria criteria = createEntityCriteria();
+		return criteria.list();
+	}
+
 
 	@SuppressWarnings("unchecked")
-	public List<Vote> readByReferendumId(Integer referendumId) {
+	public List<Vote> readReferendumVotes(Referendum referendum) {
 		Criteria criteria = createEntityCriteria();
-		criteria.add(Restrictions.eq("referendumId", referendumId));
+		criteria.add(Restrictions.eq("referendum", referendum));
 		return criteria.list();
 	}
 
+	
 	public Vote createVote(Vote vote) {
 		try{
 			persist(vote);
@@ -41,32 +51,6 @@ public class VoteDAOImpl extends AbstractDAO<Integer, Vote> implements VoteDAO{
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Vote> readAll() {
-		Criteria criteria = createEntityCriteria();
-		return criteria.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Vote> readByDeputyId(Integer deputyId) {
-		Criteria criteria = createEntityCriteria();
-		criteria.add(Restrictions.eq("deputyId", deputyId));
-		return criteria.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Vote> readAllUserVote() {
-		Criteria criteria = createEntityCriteria();
-		criteria.add(Restrictions.eq("fromDeputy", 0));
-		return criteria.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Vote> readAllDeputyVote() {
-		Criteria criteria = createEntityCriteria();
-		criteria.add(Restrictions.eq("fromDeputy", 1));
-		return criteria.list();
-	}
 
 
 }
