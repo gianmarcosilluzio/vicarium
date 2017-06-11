@@ -47,5 +47,12 @@ public class DeputyDAOImpl extends AbstractDAO<Integer, Deputy> implements Deput
 		return null;
 	}
 
+	@Override
+	public Deputy readByIdentifier(String identifier) {
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.eq("identifier", identifier));
+		return (Deputy)criteria.uniqueResult();
+	}
+
 
 }

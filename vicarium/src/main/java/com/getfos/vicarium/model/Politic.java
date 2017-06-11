@@ -26,6 +26,10 @@ public abstract class Politic {
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
 	@Column(updatable= false)
 	private Date registrationDate;
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
+	@Column(updatable= false)
+	private Date birthday;
+	private String birthPlace;
 	
 	public Politic() {
 	}
@@ -94,11 +98,20 @@ public abstract class Politic {
 		this.registrationDate = registrationDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Politic [id=" + id + ", name=" + name + ", surname=" + surname + ", sex=" + sex + ", qualification="
-				+ qualification + ", occupation=" + occupation + ", pathPhoto=" + pathPhoto + ", registrationDate="
-				+ registrationDate + "]";
+	public Date getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
+	}
+
+	public String getBirthPlace() {
+		return birthPlace;
+	}
+
+	public void setBirthPlace(String birthPlace) {
+		this.birthPlace = birthPlace;
 	}
 
 }

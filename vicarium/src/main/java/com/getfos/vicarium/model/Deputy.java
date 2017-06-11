@@ -1,7 +1,10 @@
 package com.getfos.vicarium.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -10,8 +13,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class Deputy extends Politic{
 	
 	private String identifier;
-	private String board;
+	private String politicalGroup;
+	private String politicalList;
 	private String governmentAssignment;
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
+	private Date lastUpdateDate;
 	
 	public Deputy() {
 	}
@@ -24,12 +30,12 @@ public class Deputy extends Politic{
 		this.identifier = identifier;
 	}
 
-	public String getBoard() {
-		return board;
+	public String getPoliticalGroup() {
+		return politicalGroup;
 	}
 
-	public void setBoard(String board) {
-		this.board = board;
+	public void setPoliticalGroup(String politicalGroup) {
+		this.politicalGroup = politicalGroup;
 	}
 
 	public String getGovernmentAssignment() {
@@ -40,9 +46,27 @@ public class Deputy extends Politic{
 		this.governmentAssignment = governmentAssignment;
 	}
 
+	public String getPoliticalList() {
+		return politicalList;
+	}
+
+	public void setPoliticalList(String politicalList) {
+		this.politicalList = politicalList;
+	}
+
+	public Date getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
 	@Override
 	public String toString() {
-		return "Deputy [identifier=" + identifier + ", board=" + board + ", governmentAssignment="
-				+ governmentAssignment + "]";
+		return "Deputy [identifier=" + identifier + ", politicalGroup=" + politicalGroup + ", politicalList="
+				+ politicalList + ", governmentAssignment=" + governmentAssignment + ", lastUpdateDate="
+				+ lastUpdateDate + "]";
 	}
+
 }
