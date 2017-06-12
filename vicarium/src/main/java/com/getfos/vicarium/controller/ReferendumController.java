@@ -1,5 +1,6 @@
 package com.getfos.vicarium.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,20 @@ public class ReferendumController {
 		return ResponseEntity.status(httpStatus).body(votes);
 	}
 	
+	@RequestMapping(method = RequestMethod.POST)
+	ResponseEntity<List<Referendum>> getReferendumById() {
+		try {
+			List<Referendum> referendumExternal = referendumService.getReferendumFromCamera();
+			for (Referendum referendum : referendumExternal) {
+				referendumService.addReferendum(referendum);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		httpStatus = HttpStatus.OK;
+		List<Referendum> referendums = referendumService.getAllReferendum();
+		return ResponseEntity.status(httpStatus).body(referendums);
+	}
 	
 	
 }

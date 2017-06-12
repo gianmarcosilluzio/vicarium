@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.getfos.vicarium.builder.DeputyBuilder;
 import com.getfos.vicarium.dao.DeputyDAO;
 import com.getfos.vicarium.model.Deputy;
 import com.getfos.vicarium.model.external.PoliticExternal;
@@ -65,8 +65,9 @@ public class DeputyServiceImpl implements DeputyService{
 		while ((rd.readLine()) != null) {
 		  line += rd.readLine();
 		}
-		line = line.replaceAll("\\s+","");
-		line = "[{" + line.substring(156, line.length()-5) +"]";
+		//System.out.println(line);
+		line = "[{" + line.substring(177, line.length()-5) +"]";
+		//System.out.println(line);
 		JSONParser parser = new JSONParser();
 		try{
 			Object obj = parser.parse(line);
@@ -74,7 +75,7 @@ public class DeputyServiceImpl implements DeputyService{
 		    ObjectMapper mapper = new ObjectMapper();
 		    for (int c = 0; c < array.size(); c++) {
 		    	PoliticExternal deputy = mapper.readValue(array.get(c).toString(), PoliticExternal.class);
-		    	deputies.add(buildDeputy(deputy));
+		    	deputies.add(DeputyBuilder.buildDeputy(deputy));
 			}
 		}catch(ParseException pe){
 			System.out.println("position: " + pe.getPosition());
@@ -82,26 +83,5 @@ public class DeputyServiceImpl implements DeputyService{
 		}
 		return deputies;
     }
-	
-	private static Deputy buildDeputy(PoliticExternal external){
-		Deputy deputy = new Deputy();
-		//TODO
-		//deputy.setBirthday(external.getBirthday().getValue());
-		deputy.setBirthPlace(external.getBirthplace().getValue());
-		deputy.setIdentifier(external.getIdentifier().getValue());
-		//TODO
-		//deputy.setLastUpdateDate(external.getLastUpdateDate().getValue());
-		deputy.setName(external.getName().getValue());
-		//deputy.setOccupation(external.getQualification().getValue());
-		deputy.setPathPhoto(external.getIdentifier().getValue());
-		deputy.setPoliticalGroup(external.getPoliticalGroup().getValue());
-		//deputy.setPoliticalList(external.getPoliticalList().getValue());
-		//deputy.setQualification(external.getQualification().getValue());
-		deputy.setRegistrationDate(new Date());
-		deputy.setSex(external.getSex().getValue());
-		deputy.setSurname(external.getSurname().getValue());
-		return deputy;
-	}
 
-	
 }

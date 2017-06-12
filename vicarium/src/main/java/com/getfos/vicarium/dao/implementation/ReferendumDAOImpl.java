@@ -1,5 +1,6 @@
 package com.getfos.vicarium.dao.implementation;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -35,6 +36,13 @@ public class ReferendumDAOImpl extends AbstractDAO<Integer, Referendum> implemen
 	public List<Referendum> readAll() {
 		Criteria criteria = createEntityCriteria();
 		return criteria.list();
+	}
+
+	@Override
+	public Referendum readByDate(Date date) {
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.eq("date", date));
+		return (Referendum)criteria.uniqueResult();
 	}
 
 }
