@@ -1,0 +1,107 @@
+package com.getfos.vicarium.service.implementation;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.getfos.vicarium.dao.DeputyDAO;
+import com.getfos.vicarium.model.Deputy;
+import com.getfos.vicarium.model.external.PoliticExternal;
+import com.getfos.vicarium.service.DeputyService;
+
+@SuppressWarnings("deprecation")
+@Service("deputyService")
+@Transactional
+public class DeputyServiceImpl implements DeputyService{
+	
+	@Autowired
+	private DeputyDAO deputyDAO;
+
+	public Deputy addDeputy(Deputy deputy) {
+		Deputy deputyDb = deputyDAO.readByIdentifier(deputy.getIdentifier());
+		if(deputyDb != null){
+			return deputyDb;
+		}
+		return deputyDAO.createDeputy(deputy);
+	}
+
+	public Deputy updateDeputy(Deputy deputy) {
+		return deputyDAO.updateDeputy(deputy);
+	}
+
+	public List<Deputy> getAll() {
+		return deputyDAO.readAll();
+	}
+
+	public List<Deputy> bestMatch(Integer userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public List<Deputy> getDeputyFromCamera() throws IOException{
+		List<Deputy> deputies = new ArrayList<>(); 
+		String url = "http://dati.camera.it/sparql?query=%23%23%23%23+tutti+i+deputati+in+carica+nella+XVII+Legislatura+con+info%0D%0A%0D%0A%0D%0ASELECT+DISTINCT+%3Fidentifier+%3Fsurname+%3Fname+%3Fqualification%0D%0A%3Fbirthday+%3Fbirthplace+%3Fsex%0D%0A%3FpoliticalList+%3FpoliticalGroup+%3FlastUpdateDate%0D%0AWHERE+%7B%0D%0A%3Fidentifier+ocd%3Arif_mandatoCamera+%3Fmandato%3B+a+foaf%3APerson.%0D%0A%0D%0A%23%23+deputato%0D%0A%3Fd+a+ocd%3Adeputato%3B+ocd%3Aaderisce+%3Faderisce%3B%0D%0Aocd%3Arif_leg+%3Chttp%3A%2F%2Fdati.camera.it%2Focd%2Flegislatura.rdf%2Frepubblica_17%3E%3B%0D%0Aocd%3Arif_mandatoCamera+%3Fmandato.%0D%0AOPTIONAL%7B%3Fd+dc%3Adescription+%3Fqualification%7D%0D%0A%0D%0A%23%23anagrafica%0D%0A%3Fd+foaf%3Asurname+%3Fsurname%3B+foaf%3Agender+%3Fsex%3Bfoaf%3AfirstName+%3Fname.%0D%0AOPTIONAL%7B%0D%0A%3Fidentifier+%3Chttp%3A%2F%2Fpurl.org%2Fvocab%2Fbio%2F0.1%2FBirth%3E+%3Fnascita.%0D%0A%3Fnascita+%3Chttp%3A%2F%2Fpurl.org%2Fvocab%2Fbio%2F0.1%2Fdate%3E+%3Fbirthday%3B%0D%0Ardfs%3Alabel+%3Fnato%3B+ocd%3Arif_luogo+%3FluogoNascitaUri.%0D%0A%3FluogoNascitaUri+dc%3Atitle+%3Fbirthplace.%0D%0A%7D%0D%0A%0D%0A%23%23aggiornamento+del+sistema%0D%0AOPTIONAL%7B%3Fd+%3Chttp%3A%2F%2Flod.xdams.org%2Fontologies%2Fods%2Fmodified%3E+%3FlastUpdateDate.%7D%0D%0A%0D%0A%23%23+mandato%0D%0A%3Fmandato+ocd%3Arif_elezione+%3Felezione.+%0D%0AMINUS%7B%3Fmandato+ocd%3AendDate+%3FfineMandato.%7D%0D%0A+%0D%0A%23%23+totale+mandati%0D%0A%3Fidentifier+ocd%3Arif_mandatoCamera+%3FmadatoCamera.%0D%0A%0D%0A%23%23+elezione%0D%0AOPTIONAL+%7B%0D%0A%3Felezione+dc%3Acoverage+%3Fcollegio.%0D%0A%3Felezione+ocd%3Alista+%3FpoliticalList%0D%0A%7D%0D%0A%0D%0A%23%23+adesione+a+gruppo%0D%0A%3Faderisce+ocd%3Arif_gruppoParlamentare+%3Fgruppo.%0D%0AOPTIONAL+%7B%3Faderisce+rdfs%3Alabel+%3FpoliticalGroup%7D%0D%0AMINUS%7B%3Faderisce+ocd%3AendDate+%3FfineAdesione%7D%0D%0A+%0D%0A%7D%0D%0A%0D%0A%0D%0A%09%09&debug=on&default-graph-uri=&format=application%2Fsparql-results%2Bjson";
+		@SuppressWarnings("resource")
+		HttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet(url);
+		HttpResponse response = client.execute(request);
+		BufferedReader rd = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+		String line = "";
+		while ((rd.readLine()) != null) {
+		  line += rd.readLine();
+		}
+		line = line.replaceAll("\\s+","");
+		line = "[{" + line.substring(156, line.length()-5) +"]";
+		JSONParser parser = new JSONParser();
+		try{
+			Object obj = parser.parse(line);
+		    JSONArray array = (JSONArray)obj;
+		    ObjectMapper mapper = new ObjectMapper();
+		    for (int c = 0; c < array.size(); c++) {
+		    	PoliticExternal deputy = mapper.readValue(array.get(c).toString(), PoliticExternal.class);
+		    	deputies.add(buildDeputy(deputy));
+			}
+		}catch(ParseException pe){
+			System.out.println("position: " + pe.getPosition());
+		    System.out.println(pe);
+		}
+		return deputies;
+    }
+	
+	private static Deputy buildDeputy(PoliticExternal external){
+		Deputy deputy = new Deputy();
+		//TODO
+		//deputy.setBirthday(external.getBirthday().getValue());
+		deputy.setBirthPlace(external.getBirthplace().getValue());
+		deputy.setIdentifier(external.getIdentifier().getValue());
+		//TODO
+		//deputy.setLastUpdateDate(external.getLastUpdateDate().getValue());
+		deputy.setName(external.getName().getValue());
+		//deputy.setOccupation(external.getQualification().getValue());
+		deputy.setPathPhoto(external.getIdentifier().getValue());
+		deputy.setPoliticalGroup(external.getPoliticalGroup().getValue());
+		//deputy.setPoliticalList(external.getPoliticalList().getValue());
+		//deputy.setQualification(external.getQualification().getValue());
+		deputy.setRegistrationDate(new Date());
+		deputy.setSex(external.getSex().getValue());
+		deputy.setSurname(external.getSurname().getValue());
+		return deputy;
+	}
+
+	
+}
