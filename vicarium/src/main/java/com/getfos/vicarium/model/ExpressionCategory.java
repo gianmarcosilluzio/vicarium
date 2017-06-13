@@ -2,7 +2,7 @@ package com.getfos.vicarium.model;
 
 public enum ExpressionCategory {
 	
-	FAVOREVOLE("Favorevole"), CONTRARIO("Contrario"), ASTENUTO("Astenuto");
+	FAVOREVOLE("Favorevole"), CONTRARIO("Contrario"), ASTENUTO("Astenuto"), ASSENTE("Assente");
 	
 	private String description;
 	

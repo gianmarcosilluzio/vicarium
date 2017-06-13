@@ -105,7 +105,8 @@ public class ReferendumController {
 		try {
 			List<Referendum> referendumExternal = referendumService.getReferendumFromCamera();
 			for (Referendum referendum : referendumExternal) {
-				referendumService.addReferendum(referendum);
+				referendum = referendumService.addReferendum(referendum);
+				voteService.addVoteToReferendumFromCamera(referendum);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

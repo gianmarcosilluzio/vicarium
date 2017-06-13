@@ -70,7 +70,7 @@ public class ReferendumServiceImpl implements ReferendumService{
 		    ObjectMapper mapper = new ObjectMapper();
 		    for (int c = 0; c < array.size(); c++) {
 		    	ReferendumExternal referendum = mapper.readValue(array.get(c).toString(), ReferendumExternal.class);
-		    	referendums.add(ReferendumBuilder.buildDeputy(referendum));
+		    	referendums.add(ReferendumBuilder.buildReferendum(referendum));
 			}
 		}catch(ParseException pe){
 			System.out.println("position: " + pe.getPosition());
