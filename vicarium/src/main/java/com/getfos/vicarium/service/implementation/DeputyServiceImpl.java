@@ -61,12 +61,13 @@ public class DeputyServiceImpl implements DeputyService{
 		HttpGet request = new HttpGet(url);
 		HttpResponse response = client.execute(request);
 		BufferedReader rd = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+		String lineSingle = "";
 		String line = "";
-		while ((rd.readLine()) != null) {
-		  line += rd.readLine();
+		while ((lineSingle = rd.readLine()) != null) {
+		  line += lineSingle;
 		}
 		//System.out.println(line);
-		line = "[{" + line.substring(177, line.length()-5) +"]";
+		line = "[" + line.substring(238, line.length()-5) +"]";
 		//System.out.println(line);
 		JSONParser parser = new JSONParser();
 		try{

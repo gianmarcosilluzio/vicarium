@@ -91,13 +91,14 @@ public class VoteServiceImpl implements VoteService{
 		HttpGet request = new HttpGet(url);
 		HttpResponse response = client.execute(request);
 		BufferedReader rd = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+		String lineSingle = "";
 		String line = "";
-		while ((rd.readLine()) != null) {
-		  line += rd.readLine();
+		while ((lineSingle = rd.readLine()) != null) {
+		  line += lineSingle;
 		}
-		System.out.println(line);
-		line = "[{" + line.substring(80, line.length()-5) +"]";
-		System.out.println(line);
+		//System.out.println(line);
+		line = "[" + line.substring(142, line.length()-5) +"]";
+		//System.out.println(line);
 		JSONParser parser = new JSONParser();
 		try{
 			Object obj = parser.parse(line);
@@ -109,7 +110,6 @@ public class VoteServiceImpl implements VoteService{
 		    	deputyId = deputyId.substring(0, deputyId.length()-3);
 		    	Deputy deputy = deputyDAO.readByIdentifier(deputyId);
 		    	if(deputy != null){
-			    	System.out.println(deputy);
 			    	Vote vote = VoteBuilder.buildVote(voteExternal, referendum, deputy);
 			    	voteDAO.createVote(vote);
 			    	votes.add(vote);		

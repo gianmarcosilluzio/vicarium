@@ -50,18 +50,19 @@ public class ReferendumServiceImpl implements ReferendumService{
 
 	public List<Referendum> getReferendumFromCamera() throws IOException{
 		List<Referendum> referendums = new ArrayList<>(); 
-		String url = "http://dati.camera.it/sparql?query=SELECT+distinct+*+WHERE+%7B%0D%0A%3Fidentifier+a+ocd%3Avotazione%3B+%0D%0Adc%3Adate+%3Fdate%3B+%0D%0Adc%3Atitle+%3Fdenomination%3B+%0D%0Adc%3Adescription+%3Fdescription%3B%0D%0Aocd%3Arif_leg+%3Chttp%3A%2F%2Fdati.camera.it%2Focd%2Flegislatura.rdf%2Frepubblica_17%3E%7D+%0D%0AORDER+BY+DESC%28%3Fdate%29+LIMIT+2%0D%0A%09%09&debug=on&default-graph-uri=&format=application%2Fsparql-results%2Bjson";
+		String url = "http://dati.camera.it/sparql?query=SELECT+distinct+*+WHERE+%7B%0D%0A%3Fidentifier+a+ocd%3Avotazione%3B+%0D%0Adc%3Adate+%3Fdate%3B+%0D%0Adc%3Atitle+%3Fdenomination%3B+%0D%0Adc%3Adescription+%3Fdescription%3B%0D%0Aocd%3AvotazioneFinale+1%3B%0D%0Aocd%3Arif_leg+%3Chttp%3A%2F%2Fdati.camera.it%2Focd%2Flegislatura.rdf%2Frepubblica_17%3E%7D+%0D%0AORDER+BY+DESC%28%3Fdate%29+LIMIT+1%0D%0A%09%09&debug=on&default-graph-uri=&format=application%2Fsparql-results%2Bjson";
 		@SuppressWarnings({ "resource"})
 		HttpClient client = new DefaultHttpClient();
 		HttpGet request = new HttpGet(url);
 		HttpResponse response = client.execute(request);
 		BufferedReader rd = new BufferedReader (new InputStreamReader(response.getEntity().getContent()));
+		String lineSingle = "";
 		String line = "";
-		while ((rd.readLine()) != null) {
-		  line += rd.readLine();
+		while ((lineSingle = rd.readLine()) != null) {
+		  line += lineSingle;
 		}
 		//System.out.println(line);
-		line = "[{" + line.substring(93, line.length()-5) +"]";
+		line = "[" + line.substring(155, line.length()-5) +"]";
 		//System.out.println(line);
 		JSONParser parser = new JSONParser();
 		try{
