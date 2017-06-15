@@ -10,4 +10,5 @@ public interface ReferendumDAO {
 	Referendum readByDate(Date date);
 	List<Referendum> readAll();
 	Referendum createReferendum(Referendum referendum);
+	Referendum readByIdentifier(String identifier);
 }

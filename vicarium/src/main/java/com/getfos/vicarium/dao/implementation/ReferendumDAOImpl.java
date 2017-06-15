@@ -45,4 +45,11 @@ public class ReferendumDAOImpl extends AbstractDAO<Integer, Referendum> implemen
 		return (Referendum)criteria.uniqueResult();
 	}
 
+	@Override
+	public Referendum readByIdentifier(String identifier) {
+		Criteria criteria = createEntityCriteria();
+		criteria.add(Restrictions.eq("identifier", identifier));
+		return (Referendum)criteria.uniqueResult();
+	}
+
 }
