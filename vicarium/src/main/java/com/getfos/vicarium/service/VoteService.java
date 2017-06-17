@@ -1,5 +1,6 @@
 package com.getfos.vicarium.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.getfos.vicarium.model.Deputy;
@@ -15,4 +16,5 @@ public interface VoteService {
 	List<Vote> getPoliticVotes(Politic politic);
 	List<Vote> getUserReferendumVotes(Referendum referendum, List<User> users);
 	List<Vote> getDeputyReferendumVotes(Referendum referendum, List<Deputy> deputies);
+	List<Vote> addVoteToReferendumFromCamera(Referendum referendum) throws IOException;
 }

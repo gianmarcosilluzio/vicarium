@@ -1,5 +1,7 @@
 package com.getfos.vicarium.controller;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.getfos.vicarium.model.Deputy;
@@ -19,6 +22,7 @@ import com.getfos.vicarium.service.DeputyService;
 import com.getfos.vicarium.service.ReferendumService;
 import com.getfos.vicarium.service.UserService;
 import com.getfos.vicarium.service.VoteService;
+import com.getfos.vicarium.util.DateUtil;
 
 //@CrossOrigin("http://getfos.com")
 @RestController
@@ -99,6 +103,21 @@ public class ReferendumController {
 		return ResponseEntity.status(httpStatus).body(votes);
 	}
 	
+	@RequestMapping(method = RequestMethod.POST)
+	ResponseEntity<List<Referendum>> addAllReferendumByDate(@RequestParam(value="date", defaultValue="") String date) {
+		try {
+			List<Referendum> referendumExternal = referendumService.getReferendumFromCamera(DateUtil.convertStringToDate(date,"yyyyMMdd"));
+			for (Referendum referendum : referendumExternal) {
+				referendum = referendumService.addReferendum(referendum);
+				voteService.addVoteToReferendumFromCamera(referendum);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		httpStatus = HttpStatus.OK;
+		List<Referendum> referendums = referendumService.getAllReferendum();
+		return ResponseEntity.status(httpStatus).body(referendums);
+	}
 	
 	
 }

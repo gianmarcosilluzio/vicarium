@@ -16,6 +16,7 @@ public class Referendum {
 	@Id
 	@GeneratedValue
 	private Integer referendumId;
+	private String identifier;
 	private String denomination, description, pathDocument;
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
 	private Date date;
@@ -62,5 +63,14 @@ public class Referendum {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
+	}
+	
 	
 }
