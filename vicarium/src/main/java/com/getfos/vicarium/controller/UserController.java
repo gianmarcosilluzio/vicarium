@@ -2,6 +2,7 @@ package com.getfos.vicarium.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -173,14 +174,11 @@ public class UserController {
 	
 	
 	@RequestMapping(value="/{userId}/bestmatch", method = RequestMethod.GET)
-	ResponseEntity<List<Deputy>> bestmatch(@PathVariable Integer userId, @RequestParam(value="key", defaultValue="") String key) {
-		List<Deputy> deputies = null;
-		if("".equals(key)){
-			httpStatus = HttpStatus.BAD_REQUEST;
-		}else{
-			deputies = deputyService.bestMatch(userId);
-			httpStatus = HttpStatus.OK;
-		}
-		return ResponseEntity.status(httpStatus).body(deputies);
+	ResponseEntity<Map<String, List<Object>>> bestmatch(@PathVariable Integer userId) {
+		Map<String, List<Object>> results = null;
+		User user = userService.getUserById(userId);
+		results = deputyService.bestMatch(user);
+		httpStatus = HttpStatus.OK;
+		return ResponseEntity.status(httpStatus).body(results);
 	}
 }

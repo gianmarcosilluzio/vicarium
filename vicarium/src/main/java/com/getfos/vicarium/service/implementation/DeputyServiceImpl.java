@@ -4,7 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -20,7 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getfos.vicarium.builder.DeputyBuilder;
 import com.getfos.vicarium.dao.DeputyDAO;
+import com.getfos.vicarium.dao.VoteDAO;
 import com.getfos.vicarium.model.Deputy;
+import com.getfos.vicarium.model.ExpressionCategory;
+import com.getfos.vicarium.model.User;
+import com.getfos.vicarium.model.Vote;
 import com.getfos.vicarium.model.external.PoliticExternal;
 import com.getfos.vicarium.service.DeputyService;
 
@@ -31,6 +41,9 @@ public class DeputyServiceImpl implements DeputyService{
 	
 	@Autowired
 	private DeputyDAO deputyDAO;
+	
+	@Autowired
+	private VoteDAO voteDAO;
 
 	public Deputy addDeputy(Deputy deputy) {
 		Deputy deputyDb = deputyDAO.readByIdentifier(deputy.getIdentifier());
@@ -48,9 +61,80 @@ public class DeputyServiceImpl implements DeputyService{
 		return deputyDAO.readAll();
 	}
 
-	public List<Deputy> bestMatch(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, List<Object>> bestMatch(User user) {
+		Map<String, List<Object>> results = new HashMap<>();
+		Map<Deputy, Integer> deputyScores = new HashMap<Deputy, Integer>();
+		Map<String, Integer> politicScores = new HashMap<String, Integer>();
+		List<String> politicGroups = new ArrayList<>();
+		List<Integer> deputyIdsAgree = new ArrayList<>();
+		List<Integer> deputyIdsNotAgree = new ArrayList<>();
+		List<ExpressionCategory> expressionAgree = new ArrayList<>();
+		List<ExpressionCategory> expressionNotAgree = new ArrayList<>();
+		List<Vote> userVotes = voteDAO.readPoliticVotes(user);
+		List<Deputy> deputies = deputyDAO.readAll();
+		for (Vote vote : userVotes) {
+			for (ExpressionCategory expressionCategory : ExpressionCategory.getAll()) {
+				if(!vote.getExpression().equals(expressionCategory) && !expressionCategory.equals(ExpressionCategory.ASSENTE)){
+					expressionNotAgree.add(expressionCategory);
+				}
+			}
+			expressionAgree.add(vote.getExpression());
+			deputyIdsAgree.addAll(voteDAO.readDeputyIdsAgree(deputies, expressionAgree, vote.getReferendum()));
+			deputyIdsNotAgree.addAll(voteDAO.readDeputyIdsAgree(deputies, expressionNotAgree, vote.getReferendum()));
+			expressionAgree.clear();
+			expressionNotAgree.clear();
+		}
+		int count = 0;
+		for (Deputy deputy : deputies) {
+			count = 0;
+			for (Integer deputyIdAgree : deputyIdsAgree) {
+				if(deputy.getId() == deputyIdAgree){
+					count++;
+				}
+			}
+			for (Integer deputyIdNotAgree : deputyIdsNotAgree) {
+				if(deputy.getId() == deputyIdNotAgree){
+					count--;
+				}
+			}
+			if(politicScores.get(deputy.getPoliticalGroup()) != null){
+				Integer value = politicScores.get(deputy.getPoliticalGroup());
+				politicScores.put(deputy.getPoliticalGroup(), value += count);
+			}else{
+				politicScores.put(deputy.getPoliticalGroup(), count);
+			}
+			deputyScores.put(deputy, count);
+		}
+		politicScores = sortByValue(politicScores);
+		deputyScores = sortByValue(deputyScores);
+		deputies.clear();
+		for (Map.Entry<Deputy, Integer> dep : deputyScores.entrySet()){
+			deputies.add(dep.getKey());
+		}
+		for (Map.Entry<String, Integer> group : politicScores.entrySet()){
+			politicGroups.add(group.getKey());
+		}
+		results.put("deputies", new ArrayList<Object>(deputies));
+		results.put("politicalgroup", new ArrayList<Object>(politicGroups));
+		return results;
+	}
+	
+	private static <K, V extends Comparable<? super V>> Map<K, V> sortByValue( Map<K, V> map ){
+	    List<Map.Entry<K,V>> list = new LinkedList<>(map.entrySet());
+	    Collections.sort(list, new Comparator<Map.Entry<K, V>>(){
+	        @Override
+	        public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+	        {
+	            return ( o2.getValue()).compareTo( o1.getValue() );
+	        }
+	    } );
+	
+	    Map<K, V> result = new LinkedHashMap<>();
+	    for (Map.Entry<K, V> entry : list)
+	    {
+	        result.put( entry.getKey(), entry.getValue() );
+	    }
+	    return result;
 	}
 	
 	public List<Deputy> getDeputyFromCamera() throws IOException{

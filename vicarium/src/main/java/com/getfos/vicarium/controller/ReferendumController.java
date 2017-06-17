@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.getfos.vicarium.model.Deputy;
@@ -21,6 +22,7 @@ import com.getfos.vicarium.service.DeputyService;
 import com.getfos.vicarium.service.ReferendumService;
 import com.getfos.vicarium.service.UserService;
 import com.getfos.vicarium.service.VoteService;
+import com.getfos.vicarium.util.DateUtil;
 
 //@CrossOrigin("http://getfos.com")
 @RestController
@@ -102,9 +104,9 @@ public class ReferendumController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	ResponseEntity<List<Referendum>> getReferendumById() {
+	ResponseEntity<List<Referendum>> addAllReferendumByDate(@RequestParam(value="date", defaultValue="") String date) {
 		try {
-			List<Referendum> referendumExternal = referendumService.getReferendumFromCamera(new Date());
+			List<Referendum> referendumExternal = referendumService.getReferendumFromCamera(DateUtil.convertStringToDate(date,"yyyyMMdd"));
 			for (Referendum referendum : referendumExternal) {
 				referendum = referendumService.addReferendum(referendum);
 				voteService.addVoteToReferendumFromCamera(referendum);

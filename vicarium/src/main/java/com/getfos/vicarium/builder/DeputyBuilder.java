@@ -23,7 +23,7 @@ public class DeputyBuilder {
 		deputy.setName(external.getName().getValue());
 		//deputy.setOccupation(external.getQualification().getValue());
 		deputy.setPathPhoto(PATH_PHOTO_DEPUTY + deputy.getIdentifier() + PHOTO_EXTENSION);
-		deputy.setPoliticalGroup(external.getPoliticalGroup().getValue());
+		deputy.setPoliticalGroup(external.getPoliticalGroup().getValue().split("\\s\\(",0)[0].split("\\s-")[0]);
 		//deputy.setPoliticalList(external.getPoliticalList().getValue());
 		//deputy.setQualification(external.getQualification().getValue());
 		deputy.setRegistrationDate(new Date());
