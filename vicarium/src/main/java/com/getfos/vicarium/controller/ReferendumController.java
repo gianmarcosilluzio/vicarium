@@ -1,7 +1,7 @@
 package com.getfos.vicarium.controller;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import com.getfos.vicarium.model.Deputy;
 import com.getfos.vicarium.model.Referendum;
 import com.getfos.vicarium.model.User;
 import com.getfos.vicarium.model.Vote;
+import com.getfos.vicarium.model.webapp.ReferendumWebApp;
 import com.getfos.vicarium.service.DeputyService;
 import com.getfos.vicarium.service.ReferendumService;
 import com.getfos.vicarium.service.UserService;
@@ -57,14 +58,28 @@ public class ReferendumController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	ResponseEntity<List<Referendum>> getAllReferendum() {
+	ResponseEntity<List<ReferendumWebApp>> getAllReferendum(@RequestParam(value="userId", defaultValue="0") Integer userId) {
+		User user = userService.getUserById(userId);
 		List<Referendum> referendums = referendumService.getAllReferendum();
+		List<ReferendumWebApp> results = new ArrayList<>();
+		for (Referendum referendum : referendums) {
+			ReferendumWebApp referendumWebApp = new ReferendumWebApp();
+			for(Vote vote : voteService.getPoliticVotes(user)){
+				if(vote.getReferendum().getReferendumId() == referendum.getReferendumId()){
+					referendumWebApp.setUserVoted(true);
+					break;
+				}
+				referendumWebApp.setUserVoted(false);
+			}
+			referendumWebApp.setReferendum(referendum);
+			results.add(referendumWebApp);
+		}
 		if(referendums.isEmpty()){
 			httpStatus = HttpStatus.NOT_FOUND;
 		}else{
 			httpStatus = HttpStatus.OK;
 		}
-		return ResponseEntity.status(httpStatus).body(referendums);
+		return ResponseEntity.status(httpStatus).body(results);
 	}
 	
 	@RequestMapping(value="/{referendumId}/users/votes", method = RequestMethod.GET)

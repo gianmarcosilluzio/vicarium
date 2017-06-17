@@ -20,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.getfos.vicarium.builder.VoteBuilder;
 import com.getfos.vicarium.dao.DeputyDAO;
+import com.getfos.vicarium.dao.ReferendumDAO;
 import com.getfos.vicarium.dao.VoteDAO;
 import com.getfos.vicarium.model.Deputy;
+import com.getfos.vicarium.model.ExpressionCategory;
 import com.getfos.vicarium.model.Politic;
 import com.getfos.vicarium.model.Referendum;
 import com.getfos.vicarium.model.User;
@@ -40,10 +42,39 @@ public class VoteServiceImpl implements VoteService{
 	@Autowired
 	private DeputyDAO deputyDAO;
 	
+	@Autowired
+	private ReferendumDAO referendumDAO;
+	
 	private final static String SPLIT_IDENTIFIER = ".rdf/d";
 
 
 	public Vote addVote(Vote vote) {
+		if(vote.getPolitic() instanceof Deputy){
+			if(vote.getExpression().equals(ExpressionCategory.ASTENUTO)){
+				vote.getReferendum().setTotalVoteDeputyAstenuto(vote.getReferendum().getTotalVoteDeputyAstenuto()+1);
+			}
+			else if(vote.getExpression().equals(ExpressionCategory.CONTRARIO)){
+				vote.getReferendum().setTotalVoteDeputyContrario(vote.getReferendum().getTotalVoteDeputyContrario()+1);
+			}
+			else if(vote.getExpression().equals(ExpressionCategory.FAVOREVOLE)){
+				vote.getReferendum().setTotalVoteDeputyFavorevole(vote.getReferendum().getTotalVoteDeputyFavorevole()+1);
+			}
+			else if(vote.getExpression().equals(ExpressionCategory.ASSENTE)){
+				vote.getReferendum().setTotalVoteDeputyAssente(vote.getReferendum().getTotalVoteDeputyAssente()+1);
+			}
+		}
+		else if(vote.getPolitic() instanceof User){
+			if(vote.getExpression().equals(ExpressionCategory.ASTENUTO)){
+				vote.getReferendum().setTotalVoteUserAstenuto(vote.getReferendum().getTotalVoteUserAstenuto()+1);
+			}
+			else if(vote.getExpression().equals(ExpressionCategory.CONTRARIO)){
+				vote.getReferendum().setTotalVoteUserContrario(vote.getReferendum().getTotalVoteUserContrario()+1);
+			}
+			else if(vote.getExpression().equals(ExpressionCategory.FAVOREVOLE)){
+				vote.getReferendum().setTotalVoteUserFavorevole(vote.getReferendum().getTotalVoteUserFavorevole()+1);
+			}
+		}
+		referendumDAO.updateReferendum(vote.getReferendum());
 		return voteDAO.createVote(vote);
 	}
 
@@ -111,7 +142,7 @@ public class VoteServiceImpl implements VoteService{
 		    	Deputy deputy = deputyDAO.readByIdentifier(deputyId);
 		    	if(deputy != null){
 			    	Vote vote = VoteBuilder.buildVote(voteExternal, referendum, deputy);
-			    	voteDAO.createVote(vote);
+			    	addVote(vote);
 			    	votes.add(vote);		
 		    	}else{
 		    		System.out.println("Deputato non trovato. Identifier deputato: " + deputyId);

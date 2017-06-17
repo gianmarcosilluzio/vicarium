@@ -52,4 +52,10 @@ public class ReferendumDAOImpl extends AbstractDAO<Integer, Referendum> implemen
 		return (Referendum)criteria.uniqueResult();
 	}
 
+	@Override
+	public Referendum updateReferendum(Referendum referendum) {
+		update(referendum);
+		return referendum;
+	}
+
 }
