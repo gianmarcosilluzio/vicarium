@@ -17,6 +17,13 @@ public class ReferendumBuilder {
 		referendum.setDescription(external.getDescription().getValue());
 		//TODO
 		referendum.setPathDocument("");
+		referendum.setTotalVoteDeputyAssente(0);
+		referendum.setTotalVoteDeputyAstenuto(0);
+		referendum.setTotalVoteDeputyContrario(0);
+		referendum.setTotalVoteDeputyFavorevole(0);
+		referendum.setTotalVoteUserAstenuto(0);
+		referendum.setTotalVoteUserContrario(0);
+		referendum.setTotalVoteUserFavorevole(0);
 		return referendum;
 	}
 }

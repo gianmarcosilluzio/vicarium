@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ import com.getfos.vicarium.service.ReferendumService;
 import com.getfos.vicarium.service.UserService;
 import com.getfos.vicarium.service.VoteService;
 
-//@CrossOrigin("http://getfos.com")
+@CrossOrigin("http://vicarium.org")
 @RestController
 @RequestMapping("/deputies")
 public class DeputyController {
@@ -50,6 +51,17 @@ public class DeputyController {
 		}
 		httpStatus = HttpStatus.OK;
 		List<Deputy> deputies = deputyService.getAll();
+		return ResponseEntity.status(httpStatus).body(deputies);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET)
+	ResponseEntity<List<Deputy>> getAllDeputy() {
+		List<Deputy> deputies = deputyService.getAll();
+		if(deputies.isEmpty()){
+			httpStatus = HttpStatus.NOT_FOUND;
+		}else{
+			httpStatus = HttpStatus.OK;
+		}
 		return ResponseEntity.status(httpStatus).body(deputies);
 	}
 	

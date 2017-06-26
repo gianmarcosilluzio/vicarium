@@ -39,7 +39,7 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 		System.out.println("CORSSSSS");
 		registry.addMapping("*")
 			.allowedOrigins("http://localhost")
-			.allowedOrigins("http://getfos.com")
+			.allowedOrigins("http://vicarium.org")
 			.allowedOrigins("*")
 			.allowedMethods("*")
 			.allowedHeaders("*")

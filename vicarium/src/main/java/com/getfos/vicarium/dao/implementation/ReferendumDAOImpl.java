@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -35,6 +36,7 @@ public class ReferendumDAOImpl extends AbstractDAO<Integer, Referendum> implemen
 	@SuppressWarnings("unchecked")
 	public List<Referendum> readAll() {
 		Criteria criteria = createEntityCriteria();
+		 criteria.addOrder(Order.desc("date"));
 		return criteria.list();
 	}
 
@@ -50,6 +52,12 @@ public class ReferendumDAOImpl extends AbstractDAO<Integer, Referendum> implemen
 		Criteria criteria = createEntityCriteria();
 		criteria.add(Restrictions.eq("identifier", identifier));
 		return (Referendum)criteria.uniqueResult();
+	}
+
+	@Override
+	public Referendum updateReferendum(Referendum referendum) {
+		update(referendum);
+		return referendum;
 	}
 
 }

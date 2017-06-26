@@ -20,6 +20,13 @@ public class Referendum {
 	private String denomination, description, pathDocument;
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ssZ")
 	private Date date;
+	private Integer totalVoteDeputyFavorevole;
+	private Integer totalVoteDeputyContrario;
+	private Integer totalVoteDeputyAstenuto;
+	private Integer totalVoteDeputyAssente;
+	private Integer totalVoteUserFavorevole;
+	private Integer totalVoteUserContrario;
+	private Integer totalVoteUserAstenuto;
 	
 	public Referendum() {
 	}
@@ -70,6 +77,62 @@ public class Referendum {
 
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
+	}
+
+	public Integer getTotalVoteDeputyFavorevole() {
+		return totalVoteDeputyFavorevole;
+	}
+
+	public void setTotalVoteDeputyFavorevole(Integer totalVoteDeputyFavorevole) {
+		this.totalVoteDeputyFavorevole = totalVoteDeputyFavorevole;
+	}
+
+	public Integer getTotalVoteDeputyContrario() {
+		return totalVoteDeputyContrario;
+	}
+
+	public void setTotalVoteDeputyContrario(Integer totalVoteDeputyContrario) {
+		this.totalVoteDeputyContrario = totalVoteDeputyContrario;
+	}
+
+	public Integer getTotalVoteDeputyAstenuto() {
+		return totalVoteDeputyAstenuto;
+	}
+
+	public void setTotalVoteDeputyAstenuto(Integer totalVoteDeputyAstenuto) {
+		this.totalVoteDeputyAstenuto = totalVoteDeputyAstenuto;
+	}
+
+	public Integer getTotalVoteDeputyAssente() {
+		return totalVoteDeputyAssente;
+	}
+
+	public void setTotalVoteDeputyAssente(Integer totalVoteDeputyAssente) {
+		this.totalVoteDeputyAssente = totalVoteDeputyAssente;
+	}
+
+	public Integer getTotalVoteUserFavorevole() {
+		return totalVoteUserFavorevole;
+	}
+
+	public void setTotalVoteUserFavorevole(Integer totalVoteUserFavorevole) {
+		this.totalVoteUserFavorevole = totalVoteUserFavorevole;
+	}
+
+	public Integer getTotalVoteUserContrario() {
+		return totalVoteUserContrario;
+	}
+
+	public void setTotalVoteUserContrario(Integer totalVoteUserContrario) {
+		this.totalVoteUserContrario = totalVoteUserContrario;
+	}
+
+	public Integer getTotalVoteUserAstenuto() {
+		return totalVoteUserAstenuto;
+	}
+
+	public void setTotalVoteUserAstenuto(Integer totalVoteUserAstenuto) {
+		this.totalVoteUserAstenuto = totalVoteUserAstenuto;
 	}
 	
 	
